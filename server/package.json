@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node ./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "mongoose": "^8.0.3",
+    "websocket": "^1.0.34"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.11.97",
+    "@types/websocket": "^1.0.10"
+  }
+}
