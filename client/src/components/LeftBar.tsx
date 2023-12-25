@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Chats } from "./Chats"
 import { Search } from "./Search"
-import { Header } from "./Header";
+import { LeftHeader } from "./LeftHeader";
 
 export const LeftBar = () => {
     const [isChat, setIsChat] = useState(true);
@@ -12,7 +12,7 @@ export const LeftBar = () => {
 
     return (
         <div>
-            <Header handleChange={handleChatChange} />
+            <LeftHeader handleChange={handleChatChange} />
             <div className="py-2 fixed w-[30%]" id="leftbar">
                 <Search />
                 <div className="mt-5">

@@ -9,10 +9,20 @@ body {
 
 #leftbar{
   ::-webkit-scrollbar {
-    width: 8px; 
+    width: 6px; 
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: gray; /* Replace 'your-color' with your desired color */
+    background-color: gray;
+  }
+}
+
+#rightbar{
+  ::-webkit-scrollbar {
+    width: 6px; 
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: gray; 
   }
 }
