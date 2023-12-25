@@ -1,14 +1,22 @@
-import { connectDB } from './config/db';
-import http from 'http'
-import { server as WebSocketServer } from 'websocket'
+import express from 'express'
+import http from 'node:http'
 import dotenv from 'dotenv'
+
+import { server as WebSocketServer } from 'websocket'
+import cors from 'cors'
+import { userRouter } from './routes/auth';
+import { connectDB } from './config/db';
 
 dotenv.config();
 
-const server = http.createServer((req, res) => {
-    console.log("Request Recieved!");
-    res.end("Welcome to Whats app Server!");
-})
+const app = express(); 
+
+app.use(cors());
+app.use(express.json());
+
+app.use('/auth', userRouter);
+
+const server = http.createServer(app)
 
 server.listen(3000, async () => {
     await connectDB();
@@ -25,13 +33,14 @@ const originIsAllowed = (origin: string) => {
 }
 
 wsServer.on('request', (request) => {
-
     if(!originIsAllowed(request.origin)) {
         request.reject();
         console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
         return;
     }
 
-    const connection = request.accept('echo-protocol', request.origin);
+    // const connection = request.accept('echo-protocol', request.origin);
+    const connection = request.accept();
     console.log((new Date()) + ' Connection accepted!');
 })
+
