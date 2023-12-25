@@ -11,7 +11,7 @@ export const handleToast = (status: boolean, message: string) => {
     }
 }
 
-export const handleToken = (token: string | undefined) => {
+export const handleToken = (token?: string | undefined) => {
     if(token) {
         localStorage.setItem('token', token);
     } else {

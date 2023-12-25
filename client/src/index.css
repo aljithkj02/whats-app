@@ -7,22 +7,14 @@ body {
   font-family: sans-serif;
 }
 
-#leftbar{
-  ::-webkit-scrollbar {
-    width: 6px; 
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: gray;
-  }
+::-webkit-scrollbar {
+  width: 6px; 
 }
 
-#rightbar{
-  ::-webkit-scrollbar {
-    width: 6px; 
-  }
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+}
 
-  ::-webkit-scrollbar-thumb {
-    background-color: gray; 
-  }
+html {
+  scroll-behavior: smooth;
 }
