@@ -6,3 +6,13 @@ body {
   margin: 0;
   font-family: sans-serif;
 }
+
+#leftbar{
+  ::-webkit-scrollbar {
+    width: 8px; 
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: gray; /* Replace 'your-color' with your desired color */
+  }
+}
