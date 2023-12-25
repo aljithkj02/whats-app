@@ -1,4 +1,6 @@
+import { loginUser, registerUser } from "apis/auth";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [show, setShow] = useState(false);
@@ -8,6 +10,8 @@ export const Login = () => {
     email: '',
     password: ''
   })
+
+  const navigate = useNavigate();
 
   const handleShow = () => {
     setShow(!show);
@@ -31,8 +35,24 @@ export const Login = () => {
     })
   }
 
-  const submitForm = (e: FormEvent) => {
-    e.preventDefault();
+  const submitForm = async (e: FormEvent) => {
+    e.preventDefault(); 
+    if(info.password.includes(' ')){
+      alert('Invalid password');
+      return;
+    }
+
+    if (isLogin) {
+      const res = await loginUser(info);
+      if(res?.status) {
+        navigate('/');
+      }
+    } else {
+      const res = await registerUser(info);
+      if(res?.status) {
+        navigate('/');
+      }
+    }
   }
 
   return (
@@ -51,7 +71,7 @@ export const Login = () => {
                     User Name
                   </label>
                   <input className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                    id="useremail" type="text" placeholder="Username" name="name" required onChange={handleChangeInfo}
+                    id="name" type="text" placeholder="Name" name="name" required onChange={handleChangeInfo}
                     value={info.name}
                   />
                 </div>
@@ -61,7 +81,7 @@ export const Login = () => {
                   User Email
                 </label>
                 <input className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                  id="useremail" type="email" placeholder="Username" name="email" required onChange={handleChangeInfo}
+                  id="useremail" type="email" placeholder="Email" name="email" required onChange={handleChangeInfo}
                   value={info.email}
                 />
               </div>
