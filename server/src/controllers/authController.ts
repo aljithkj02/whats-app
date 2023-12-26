@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../model/user.model";
+import { generateToken } from "./jwtController";
 
 export const loginUser = async (req: Request, res: Response) => {
     try {
@@ -22,8 +23,11 @@ export const loginUser = async (req: Request, res: Response) => {
             return;
         }
 
+        const token = generateToken({ id: isUserExist.id, email: isUserExist.email });
+
         res.json({
             status: true,
+            token,
             message: 'Login Successfully',
         })
         return;
@@ -51,8 +55,11 @@ export const registerUser = async (req: Request, res: Response) => {
             password
         })
 
+        const token = generateToken({ id: user.id, email });
+
         res.json({
             status: true,
+            token,
             message: 'Register Successfully',
         })
         return;
