@@ -7,7 +7,7 @@ const roomSchema = new Schema({
     },
     owner: {
         type: Schema.Types.ObjectId,
-        require: true,
+        required: true,
     },
     members: [{
         type: Schema.Types.ObjectId,

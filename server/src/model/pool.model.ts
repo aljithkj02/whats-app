@@ -3,7 +3,8 @@ import { Schema, model } from "mongoose";
 const poolSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
-        require: true,
+        required: true,
+        ref: 'user'
     },
     connection: {
         type: Schema.Types.Mixed,
