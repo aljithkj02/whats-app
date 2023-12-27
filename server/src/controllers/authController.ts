@@ -1,10 +1,22 @@
 import { Request, Response } from "express";
 import { User } from "../model/user.model";
 import { generateToken } from "./jwtController";
+import { LoginInfoSchema, RegisterInfoSchema } from "../validators/auth";
 
 export const loginUser = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
+
+        const validate = LoginInfoSchema.safeParse({ email, password });
+
+        if(!validate.success) {
+            const message = validate.error.errors[0].message;
+            res.status(406).json({
+                status: false,
+                message,
+            })
+            return;
+        }
 
         const isUserExist = await User.findOne({ email });
         if(!isUserExist) {
@@ -39,6 +51,17 @@ export const loginUser = async (req: Request, res: Response) => {
 export const registerUser = async (req: Request, res: Response) => {
     try {
         const { name, email, password } = req.body;
+
+        const validate = RegisterInfoSchema.safeParse({ name, email, password });
+
+        if(!validate.success) {
+            const message = validate.error.errors[0].message;
+            res.status(406).json({
+                status: false,
+                message,
+            })
+            return;
+        }
 
         const isUserExist = await User.findOne({ email });
         if(isUserExist) {
