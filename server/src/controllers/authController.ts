@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../model/user.model";
 import { generateToken } from "./jwtController";
 import { LoginInfoSchema, RegisterInfoSchema } from "../validators/auth";
+import { IRequest } from "../interfaces";
 
 export const loginUser = async (req: Request, res: Response) => {
     try {
@@ -89,4 +90,18 @@ export const registerUser = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+export const getUsers = async (req: IRequest, res: Response) => {
+    const users = await User.find({ _id: { $ne: req.user?._id }})
+    
+    res.json({
+        status: true,
+        users,
+    })
+}
+
+export const findUserById = async (id: string) => {
+    const user = User.findById({ _id: id });
+    return user;
 }
