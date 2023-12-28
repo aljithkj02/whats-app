@@ -1,6 +1,14 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
-const poolSchema = new Schema(
+
+export interface IPool extends Document {
+    userId: Schema.Types.ObjectId;
+    connection: object;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const poolSchema = new Schema<IPool>(
     {
         userId: {
             type: Schema.Types.ObjectId,
@@ -20,4 +28,4 @@ const poolSchema = new Schema(
     }
 )
 
-export const Pool = model('pool', poolSchema);
+export const Pool = model<IPool>('pool', poolSchema);

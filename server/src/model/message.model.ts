@@ -1,7 +1,14 @@
+import { Schema, model, Document } from "mongoose";
 
-import { Schema, model } from "mongoose";
+export interface IMessage extends Document {
+    senderId: Schema.Types.ObjectId;
+    roomId: Schema.Types.ObjectId | null;
+    recieverId: Schema.Types.ObjectId | null;
+    createdAt: Date;
+    updatedAt: Date;
+}
 
-const messageSchema = new Schema(
+const messageSchema = new Schema<IMessage>(
     {
         senderId: {
             type: Schema.Types.ObjectId,
@@ -27,4 +34,4 @@ const messageSchema = new Schema(
     }
 )
 
-export const Message = model('message', messageSchema);
+export const Message = model<IMessage>('message', messageSchema);

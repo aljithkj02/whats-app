@@ -1,6 +1,14 @@
-import { model, Schema } from 'mongoose'
+import { model, Schema, Document } from 'mongoose'
 
-const roomSchema = new Schema(
+export interface IRoom extends Document {
+    name: string;
+    owner: Schema.Types.ObjectId;
+    members: Schema.Types.ObjectId[];
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const roomSchema = new Schema<IRoom>(
     {
         name: {
             type: String,
@@ -9,6 +17,7 @@ const roomSchema = new Schema(
         owner: {
             type: Schema.Types.ObjectId,
             required: true,
+            ref: 'user'
         },
         members: [{
             type: Schema.Types.ObjectId,
@@ -23,4 +32,4 @@ const roomSchema = new Schema(
     }
 )
 
-export const Room = model('room', roomSchema);
+export const Room = model<IRoom>('room', roomSchema);
