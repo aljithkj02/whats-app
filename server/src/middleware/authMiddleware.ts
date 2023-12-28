@@ -1,5 +1,5 @@
 import { findUserById } from "../controllers/authController";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { IRequest } from "../interfaces";
 import jwt from "jsonwebtoken";
 
@@ -34,4 +34,20 @@ export const authMiddleware = async (req: IRequest, res: Response, next: NextFun
     
     req['user'] = user;
     next();
+}
+
+export const validateWSRequest = async (token: string) => {
+    const isValid = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+
+    if(!isValid || typeof isValid === 'string') {
+        return {
+            status: false,
+            message: 'Invalid Token'
+        }
+    }
+
+    return {
+        status: true,
+        id: isValid.id
+    }
 }
