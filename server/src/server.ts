@@ -2,7 +2,7 @@ import express from 'express'
 import http from 'node:http'
 import dotenv from 'dotenv'
 
-import { server as WebSocketServer, Message, request } from 'websocket'
+import { server as WebSocketServer, Message, request, connection } from 'websocket'
 import cors from 'cors'
 
 import { connectDB } from './config/db';
@@ -10,6 +10,7 @@ import { roomRouter } from './routes/room.routes'
 import { validateWSRequest } from './middleware/authMiddleware'
 import { authRouter } from './routes/auth.routes'
 import { handleRequest } from './ws'
+import { addConnection, removeConnection } from './controllers/poolController'
 
 dotenv.config();
 
@@ -59,12 +60,21 @@ wsServer.on('request', async (request: request) => {
         }
         
         // const connection = request.accept('echo-protocol', request.origin);
-        const connection = request.accept();
+        const connection: connection = request.accept();
         console.log((new Date()) + ' Connection accepted!');
 
+        addConnection({ userId: data.id, connection})
+
         connection.on('message', (message: Message) => {
-            handleRequest(message);
+            if(message.type === 'utf8') {
+                handleRequest(JSON.parse(message.utf8Data), data.id);
+            }
         })
+
+        connection.on('close', function(reasonCode, description) {
+            console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+            removeConnection(data.id);
+        });
 
     } catch (error: any) {
         console.log((error as Error).message);

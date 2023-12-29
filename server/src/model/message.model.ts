@@ -1,15 +1,20 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface IMessage extends Document {
+    message: string;
     senderId: Schema.Types.ObjectId;
     roomId: Schema.Types.ObjectId | null;
-    recieverId: Schema.Types.ObjectId | null;
+    receiverId: Schema.Types.ObjectId | null;
     createdAt: Date;
     updatedAt: Date;
 }
 
 const messageSchema = new Schema<IMessage>(
     {
+        message: {
+            type: String,
+            required: true,
+        },
         senderId: {
             type: Schema.Types.ObjectId,
             required: true,
@@ -20,7 +25,7 @@ const messageSchema = new Schema<IMessage>(
             ref: 'room',
             default: null,
         },
-        recieverId: {
+        receiverId: {
             type: Schema.Types.ObjectId,
             ref: 'user',
             default: null,

@@ -1,5 +1,6 @@
+import { connection } from "websocket";
 
 export interface IAddPool {
     userId: string;
-    connection: object | null;
+    connection: connection;
 }
