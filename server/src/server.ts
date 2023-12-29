@@ -2,12 +2,14 @@ import express from 'express'
 import http from 'node:http'
 import dotenv from 'dotenv'
 
-import { server as WebSocketServer } from 'websocket'
+import { server as WebSocketServer, Message, request } from 'websocket'
 import cors from 'cors'
-import { userRouter } from './routes/auth.routes';
+
 import { connectDB } from './config/db';
 import { roomRouter } from './routes/room.routes'
 import { validateWSRequest } from './middleware/authMiddleware'
+import { authRouter } from './routes/auth.routes'
+import { handleRequest } from './ws'
 
 dotenv.config();
 
@@ -16,7 +18,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/auth', userRouter);
+app.use('/auth', authRouter);
 app.use('/room', roomRouter)
 
 
@@ -36,7 +38,7 @@ const originIsAllowed = (origin: string) => {
     return true;
 }
 
-wsServer.on('request', async (request) => {
+wsServer.on('request', async (request: request) => {
     if(!originIsAllowed(request.origin)) {
         request.reject();
         console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
@@ -59,6 +61,11 @@ wsServer.on('request', async (request) => {
         // const connection = request.accept('echo-protocol', request.origin);
         const connection = request.accept();
         console.log((new Date()) + ' Connection accepted!');
+
+        connection.on('message', (message: Message) => {
+            handleRequest(message);
+        })
+
     } catch (error: any) {
         console.log((error as Error).message);
         request.reject(401, (error as Error).message);
