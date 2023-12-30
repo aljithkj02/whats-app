@@ -20,8 +20,8 @@ export const UserMessage = z.object({
 })
 
 export const TypingStatus = z.object({
+    receiverId: z.string().optional(),
     roomId: z.string().optional(),
-    userId: z.string().optional(),
 })
 
 export type UserMessageType = z.infer<typeof UserMessage>;
