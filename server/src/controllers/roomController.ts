@@ -16,9 +16,9 @@ export const createRoom = async (req: Request, res: Response) => {
 
 export const getMessagesFromRoom = async (req: Request, res: Response) => {
     try {
-        const { isRoom, roomId } = req.query;
+        const { roomId } = req.params;
 
-        const validate = HistoryMessageSchema.safeParse({ isRoom, roomId });
+        const validate = HistoryMessageSchema.safeParse({ roomId });
 
         if(!validate.success) {
             const message = validate.error.errors[0].message;
@@ -31,7 +31,6 @@ export const getMessagesFromRoom = async (req: Request, res: Response) => {
 
         const room = await Room.findOne({ 
             _id: roomId,
-            isGroup: isRoom,
         })
 
         if(!room) {
@@ -46,7 +45,9 @@ export const getMessagesFromRoom = async (req: Request, res: Response) => {
             _id: {
                 $in: room.messages,
             }
-        })
+        }).select("-updatedAt -__v ")
+
+        console.log({ messages: room.messages })
         
         res.json({
             status: true,
@@ -78,11 +79,15 @@ export const getChats = async (req: IRequest, res: Response) => {
         const rooms = await Room.find({
             isGroup: type === ChatType.CHAT ? false : true,
             members: id,
-        })
+        }).populate({
+            path: 'members',
+            select: "name"
+        }).select('-createdAt -updatedAt -__v -messages')
 
         res.json({
             status: true,
             rooms,
+            id,
         })
 
     } catch (error) {

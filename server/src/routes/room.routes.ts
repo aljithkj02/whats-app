@@ -6,4 +6,4 @@ export const roomRouter = Router();
 
 roomRouter.post('/create', createRoom);
 roomRouter.get('/chats/:type', getChats);
-roomRouter.get('/messages', getMessagesFromRoom);
+roomRouter.get('/messages/:roomId', getMessagesFromRoom);
