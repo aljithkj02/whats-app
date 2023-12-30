@@ -13,27 +13,36 @@ export const authMiddleware = async (req: IRequest, res: Response, next: NextFun
         return;
     }
 
-    const isValid = jwt.verify(token, process.env.JWT_SECRET || 'secret');
-    if(!isValid || typeof isValid === 'string') {
-        res.status(401).json({
-            status: false,
-            message: 'Invalid Token'
-        })
-        return;
-    }
+    jwt.verify(token, process.env.JWT_SECRET || 'secret', async (err, data) => {
+        if(err) {
+            res.status(404).json({
+                status: false,
+                message: err.message,
+            })
+            return false;
+        }
 
-    const user = await findUserById(isValid.id);
-
-    if(!user) {
-        res.status(401).json({
-            status: false,
-            message: 'Invalid Token'
-        })
-        return;
-    }
+        if(!data || typeof data === 'string') {
+            res.status(401).json({
+                status: false,
+                message: 'Invalid Token'
+            })
+            return;
+        }
     
-    req['user'] = user;
-    next();
+        const user = await findUserById(data.id);
+    
+        if(!user) {
+            res.status(401).json({
+                status: false,
+                message: 'Invalid Token'
+            })
+            return;
+        }
+        
+        req['user'] = user;
+        next();
+    });
 }
 
 export const validateWSRequest = async (token: string) => {
