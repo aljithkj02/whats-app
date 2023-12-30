@@ -13,3 +13,11 @@ export interface IChat {
         name: string;
     }[]
 }
+
+export interface IMessage {
+    _id: string;
+    message: string;
+    createdAt: Date;
+    receiverId: string;
+    senderId: string;
+}

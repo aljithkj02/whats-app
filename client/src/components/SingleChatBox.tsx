@@ -1,7 +1,10 @@
 import { IChat } from "../interfaces/chat.interface"
 
-export const SingleChatBox = ({ members, _id: id }: IChat) => {
-  const receiverName = members.find(({ _id }) => _id !== id );
+interface ISingleChatBox extends IChat {
+  myId: string;
+}
+export const SingleChatBox = ({ members, myId }: ISingleChatBox) => {
+  const receiverName = members.find(({ _id }) => _id !== myId );
   
   return (
     <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-800 px-5 duration-200">
