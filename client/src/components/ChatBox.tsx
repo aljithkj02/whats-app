@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { useSelector } from "react-redux"
+import { StoreType } from "../store"
 
 
 const data = [
@@ -23,8 +25,9 @@ const style1 = 'self-start bg-[#005c4b] px-3 py-2 rounded-lg max-w-[50%] rounded
 const style2 = 'self-end bg-[#202c33] px-3 py-2 rounded-lg max-w-[50%]  rounded-tr-none relative'
 
 export const ChatBox = () => {
-  const [messages, setMessages] = useState(data);
-
+  const [messages, setMessages] = useState([]);
+  const roomId = useSelector((data: StoreType) => data.chats.roomId);
+  console.log({ roomId })
   return (
     <div className="flex flex-col-reverse gap-4 h-[80vh] px-20 overflow-y-scroll py-6">
       { messages.map(({ id, message}) => {
