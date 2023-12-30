@@ -11,6 +11,7 @@ import { validateWSRequest } from './middleware/authMiddleware'
 import { authRouter } from './routes/auth.routes'
 import { handleRequest } from './ws'
 import { addConnection, removeConnection } from './controllers/poolController'
+import { authMiddleware } from './middleware/authMiddleware'
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/auth', authRouter);
-app.use('/room', roomRouter)
+app.use('/room', authMiddleware, roomRouter)
 
 
 const server = http.createServer(app)

@@ -20,11 +20,6 @@ const messageSchema = new Schema<IMessage>(
             required: true,
             ref: 'user',
         },
-        roomId: {
-            type: Schema.Types.ObjectId,
-            ref: 'room',
-            default: null,
-        },
         receiverId: {
             type: Schema.Types.ObjectId,
             ref: 'user',
