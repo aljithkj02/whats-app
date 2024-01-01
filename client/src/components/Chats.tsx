@@ -12,7 +12,6 @@ export const Chats = ({ chatsData }: { chatsData: IChat[] }) => {
   const handleChatChange = (id: string) => {
     dispatch(setRoomId(id));
   }
-    
 
   return (
     <div>

@@ -1,11 +1,13 @@
+import { ChatType } from "../interfaces/chat.interface";
 import { useState } from "react";
 import { MdOutlineChatBubble } from "react-icons/md";
+import { PiUsersFour } from "react-icons/pi";
 import { MdGroups } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { handleToken } from "utils";
+import { handleToken } from "../utils";
 
 interface IHeader {
-  handleChange: (value: boolean) => void;
+  handleChange: (value: ChatType) => void;
 }
 
 export const LeftHeader = ({ handleChange }: IHeader) => {
@@ -40,12 +42,17 @@ export const LeftHeader = ({ handleChange }: IHeader) => {
       </div>
       <div className="flex gap-6 items-center">
         <div className="text-white text-2xl cursor-pointer"
-          onClick={() => handleChange(true)}
+          onClick={() => handleChange(ChatType.USERS)}
+        >
+            <PiUsersFour />
+        </div>
+        <div className="text-white text-2xl cursor-pointer"
+          onClick={() => handleChange(ChatType.CHAT)}
         >
             <MdOutlineChatBubble />
         </div>
         <div className="text-white text-3xl cursor-pointer"
-          onClick={() => handleChange(false)}
+          onClick={() => handleChange(ChatType.ROOM)}
         >
             <MdGroups />
         </div>

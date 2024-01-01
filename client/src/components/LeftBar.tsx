@@ -2,31 +2,40 @@ import { useEffect, useState } from "react";
 import { Chats } from "./Chats"
 import { Search } from "./Search"
 import { LeftHeader } from "./LeftHeader";
-import { getChats } from "../apis/chat";
-import { ChatType, IChat } from "../interfaces/chat.interface";
+import { getChats, getUsers } from "../apis/chat";
+import { ChatType, IChat, IUser } from "../interfaces/chat.interface";
 import { useDispatch } from "react-redux";
 import { setMyId, setRoomId } from "store/chatSlice";
+import { Users } from "./Users";
 
 export const LeftBar = () => {
-    const [isChat, setIsChat] = useState(true);
+    const [type, setType] = useState<ChatType>(ChatType.CHAT);
     const [chatsData, setChatsData] = useState<IChat[]>([]);
+    const [usersData, setUsersData] = useState<IUser[]>([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
         fetchChats();
-    }, [isChat])
+    }, [type])
 
-    const handleChatChange = (value: boolean) => {
-        setIsChat(value);
+    const handleChatChange = (value: ChatType) => {
+        setType(value);
     }
 
     const fetchChats = async () => {
-        const chats = await getChats(isChat ? ChatType.CHAT : ChatType.ROOM);
-        
-        if(chats?.id) {
-            setChatsData(chats.rooms);
-            dispatch(setMyId(chats.id));
-            chats.rooms.length && dispatch(setRoomId(chats.rooms[0]._id));
+        if(type === ChatType.USERS) {
+            const users = await getUsers();
+            if(users) {
+                setUsersData(users);
+            }
+        } else {
+            const chats = await getChats(type);
+            
+            if(chats?.id) {
+                setChatsData(chats.rooms);
+                dispatch(setMyId(chats.id));
+                chats.rooms.length && dispatch(setRoomId(chats.rooms[0]._id));
+            }
         }
     }
 
@@ -37,9 +46,9 @@ export const LeftBar = () => {
                 <Search />
                 <div className="mt-5">
                     <p className="text-white px-5">
-                        { isChat ? 'Friends' : 'Groups'}
+                        { type === ChatType.CHAT ? 'Friends' : type === ChatType.ROOM ? 'Groups' : 'Users'}
                     </p>
-                    <Chats chatsData={chatsData} />
+                    { type === ChatType.USERS ? <Users usersData={usersData} /> : <Chats chatsData={chatsData } /> }
                 </div>
             </div>
         </div>

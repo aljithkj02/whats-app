@@ -2,6 +2,7 @@
 export enum ChatType {
     CHAT = 'chat',
     ROOM = 'room',
+    USERS = 'users',
 }
 
 export interface IChat {
@@ -20,4 +21,10 @@ export interface IMessage {
     createdAt: Date;
     receiverId: string;
     senderId: string;
+}
+
+export interface IUser {
+    _id: string;
+    name: string;
+    email: string;
 }
