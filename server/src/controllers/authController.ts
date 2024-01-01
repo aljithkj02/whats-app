@@ -93,7 +93,11 @@ export const registerUser = async (req: Request, res: Response) => {
 }
 
 export const getUsers = async (req: IRequest, res: Response) => {
-    const users = await User.find({ _id: { $ne: req.user?._id }})
+    const users = await User.find({ 
+        _id: { 
+            $ne: req.user?._id 
+        }
+    }).select('name email')
     
     res.json({
         status: true,
