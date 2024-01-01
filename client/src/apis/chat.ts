@@ -39,11 +39,7 @@ export const getMessages = async (roomId: string) => {
         });
         const json: { status: boolean, messages: IMessage[], message?: string} = await response.json();
 
-        if(!json?.status && json.message) {
-            handleToast(json.status, json.message);
-        }   
-        console.log(json);
-        return json.messages;
+        return json?.messages || [];
     } catch (error) {
         console.log(error);
         toast.error((error as Error)?.message || 'Something went wrong!');

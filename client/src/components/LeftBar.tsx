@@ -4,19 +4,22 @@ import { Search } from "./Search"
 import { LeftHeader } from "./LeftHeader";
 import { getChats, getUsers } from "../apis/chat";
 import { ChatType, IChat, IUser } from "../interfaces/chat.interface";
-import { useDispatch } from "react-redux";
-import { setMyId, setRoomId } from "store/chatSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setMyId, setRoomId, setUserName } from "store/chatSlice";
 import { Users } from "./Users";
+import { StoreType } from "store";
 
 export const LeftBar = () => {
     const [type, setType] = useState<ChatType>(ChatType.CHAT);
     const [chatsData, setChatsData] = useState<IChat[]>([]);
     const [usersData, setUsersData] = useState<IUser[]>([]);
+
+    const myId = useSelector((data: StoreType) => data.chats.myId);
     const dispatch = useDispatch();
 
     useEffect(() => {
         fetchChats();
-    }, [type])
+    }, [type, myId])
 
     const handleChatChange = (value: ChatType) => {
         setType(value);
@@ -27,6 +30,7 @@ export const LeftBar = () => {
             const users = await getUsers();
             if(users) {
                 setUsersData(users);
+                dispatch(setUserName(users[0]?.name || ""));
             }
         } else {
             const chats = await getChats(type);
@@ -34,7 +38,13 @@ export const LeftBar = () => {
             if(chats?.id) {
                 setChatsData(chats.rooms);
                 dispatch(setMyId(chats.id));
-                chats.rooms.length && dispatch(setRoomId(chats.rooms[0]._id));
+                if(chats.rooms.length) {
+                    const id = chats.rooms[0]._id;
+                    const user = chats.rooms[0].members.find(member => member._id !== myId);
+
+                    dispatch(setRoomId(id));
+                    dispatch(setUserName(user?.name || ""));
+                }
             }
         }
     }

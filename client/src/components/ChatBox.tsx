@@ -26,6 +26,9 @@ export const ChatBox = () => {
 
   return (
     <div className="flex flex-col-reverse gap-4 h-[80vh] px-20 overflow-y-scroll py-6">
+      { !messages.length && 
+        <p className="text-gray-300 text-center">Start messaging!</p> 
+      }
       { myId && messages.map(({ senderId, message, createdAt, _id}: IMessage) => {
         return (
           <div key={_id} className={senderId === myId ? style2: style1}>

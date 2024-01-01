@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 interface ChatState {
     roomId: string | null;
     myId: string | null;
+    userName: string;
 }
 
 const initialState: ChatState = {
     roomId: null,
     myId: null,
+    userName: "",
 };
 
 
@@ -19,10 +21,13 @@ export const chatSlice = createSlice({
             state.roomId = action.payload;
         },
         setMyId: (state, action) => {
-            state.myId = action.payload
+            state.myId = action.payload;
+        },
+        setUserName: (state, action) => {
+            state.userName = action.payload;
         }
     }
 }) 
 
 export default chatSlice.reducer;
-export const { setRoomId, setMyId } = chatSlice.actions;
+export const { setRoomId, setMyId, setUserName } = chatSlice.actions;
