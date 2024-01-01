@@ -3,6 +3,7 @@ import { Provider } from "react-redux"
 import { RouterProvider } from "react-router-dom"
 import { router } from "routes"
 import { appStore } from "./store"
+import { MyContextProvider } from "context"
 
 function App() {
 
@@ -10,7 +11,9 @@ function App() {
     <>
       <Toaster />
       <Provider store={appStore}>
-        <RouterProvider router={router} />
+        <MyContextProvider>
+          <RouterProvider router={router} />
+        </MyContextProvider>
       </Provider>
     </>
   )
