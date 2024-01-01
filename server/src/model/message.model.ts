@@ -24,6 +24,11 @@ const messageSchema = new Schema<IMessage>(
             type: Schema.Types.ObjectId,
             ref: 'user',
             default: null,
+        },
+        roomId: {
+            type: Schema.Types.ObjectId,
+            ref: 'room',
+            default: null,
         }
     },
     {

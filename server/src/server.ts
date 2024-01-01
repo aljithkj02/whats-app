@@ -46,9 +46,10 @@ wsServer.on('request', async (request: request) => {
         console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
         return;
     }
-
+    
     try {
-        const token = request.httpRequest.headers.authorization;
+        // const token = request.httpRequest.headers.authorization;
+        const token = request.httpRequest.url?.slice(1);
         if(!token) {
             request.reject(401, "Unauthorized User!");
             return;
@@ -60,13 +61,14 @@ wsServer.on('request', async (request: request) => {
             return;
         }
         
-        // const connection = request.accept('echo-protocol', request.origin);
-        const connection: connection = request.accept();
+        const connection = request.accept('echo-protocol', request.origin);
+        // const connection: connection = request.accept();
         console.log((new Date()) + ' Connection accepted!');
 
         addConnection({ userId: data.id, connection})
 
         connection.on('message', (message: Message) => {
+            // console.log(message);
             if(message.type === 'utf8') {
                 handleRequest(JSON.parse(message.utf8Data), data.id);
             }

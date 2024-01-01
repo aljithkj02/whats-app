@@ -1,5 +1,4 @@
 import { model, Schema, Document } from 'mongoose'
-import { boolean } from 'zod';
 
 export interface IRoom extends Document {
     name: string;
@@ -27,9 +26,8 @@ const roomSchema = new Schema<IRoom>(
         }],
         messages: [{
             type: Schema.Types.ObjectId,
-            ref: 'room',
-        }
-        ],
+            ref: 'message',
+        }],
         isGroup: {
             type: Boolean,
             required: true,

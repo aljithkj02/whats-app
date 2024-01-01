@@ -46,8 +46,6 @@ export const getMessagesFromRoom = async (req: Request, res: Response) => {
                 $in: room.messages,
             }
         }).select("-updatedAt -__v ")
-
-        console.log({ messages: room.messages })
         
         res.json({
             status: true,

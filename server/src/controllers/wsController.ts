@@ -46,10 +46,47 @@ export const sendMessageToUser = async ( payload: UserMessageType, id: string ) 
     console.log("Successfully Send the Message!");
 }
 
-export const sendMessageToRoom = async ( payload: TypingStatusType, id: string ) => {
-    console.log({ payload });
-    // connections.forEach((value, key) => {
-    //     if(key === id) return;
-    //     (value as connection).sendUTF(JSON.stringify(payload));
-    // })
+export const sendMessageToRoom = async ( payload: UserMessageType, id: string ) => {
+    const { roomId, message } = payload;
+    if(!roomId) return;
+
+    const room = await Room.findOne({
+        _id: roomId
+    }).select('members');
+
+    if(!room){
+        console.log('No such room exist!');
+        return;
+    }
+
+    const messageData = await Message.create({
+        message,
+        roomId: room._id,
+        senderId: id,
+    })
+
+    // const members = room.members.filter((_id ) => _id.toString() !== id);
+    const members = room.members;
+
+    const receiverConnections = members.map((_id) => {
+        return connections.get(_id.toString());
+    })
+
+    if(receiverConnections.length) {
+        receiverConnections.forEach((conn) => {
+            if(conn) {
+                conn.sendUTF(JSON.stringify(messageData));
+            }
+        })
+    } 
+
+    await Room.updateOne({ 
+        _id: room._id,
+    }, {
+        $push: {
+            messages: messageData._id,
+        }
+    })
+
+    console.log("Successfully Send the Message!");
 }
