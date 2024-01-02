@@ -1,16 +1,26 @@
 import { IMessage } from "interfaces/chat.interface";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { pushMessage } from "store/chatSlice";
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
 interface MyContextMethods {
-    sendMessage: (roomId: string, message: string) => void;
+    sendMessage: ({ roomId, message, receiverId }: IInputMsg) => void;
     client: W3CWebSocket | null;
+}
+
+interface IInputMsg { 
+    roomId?: string;
+    message: string; 
+    receiverId?: string 
 }
 
 const myContext = createContext<MyContextMethods | undefined>(undefined);
 
 export const MyContextProvider = ({ children }: { children : ReactNode }) => {
     const [client, setClient] = useState<W3CWebSocket | null>(null);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         connectWS();
@@ -36,19 +46,20 @@ export const MyContextProvider = ({ children }: { children : ReactNode }) => {
         client.onmessage = function(e) {
           if(typeof e.data === 'string') {
             const newMessage: IMessage = JSON.parse(e.data);
-            console.log({newMessage});
-            // setMessages((msg) => [newMessage, ...msg])
+            // console.log({newMessage});
+            dispatch(pushMessage(newMessage));
           }
         };
     }
 
-    const sendMessage = (roomId: string, message: string) => {
+    const sendMessage = ({ roomId, message, receiverId }: IInputMsg) => {
         if(!client) return;
         client.send(JSON.stringify({
           type: "SEND_MESSAGE",
           payload: {
-            roomId,
             message,
+            ...(roomId && { roomId }),
+            ...(receiverId && { receiverId })
           }
         }))
     }

@@ -19,7 +19,7 @@ export interface IMessage {
     _id: string;
     message: string;
     createdAt: Date;
-    receiverId: string;
+    roomId: string;
     senderId: string;
 }
 
