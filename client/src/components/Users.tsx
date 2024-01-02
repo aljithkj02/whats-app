@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux"
 import { IUser } from "../interfaces/chat.interface"
 import { SingleUser } from "./SingleUser"
-import { setRoomId, setUserName } from "../store/chatSlice"
+import { setReceiverId, setUserName } from "../store/chatSlice"
 
 interface IUsers {
     usersData: IUser[]
@@ -11,7 +11,7 @@ export const Users = ({ usersData }: IUsers) => {
     const dispatch = useDispatch();
 
     const handleChatChange = (id: string, name: string) => {
-        dispatch(setRoomId(id));
+        dispatch(setReceiverId(id));
         dispatch(setUserName(name));
     }
 
