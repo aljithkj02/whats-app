@@ -7,7 +7,7 @@ import { StoreType } from "store";
 export const MessageComposer = () => {
   const [text, setText] = useState('');
   const data = useMyContext();
-  const roomId = useSelector((data: StoreType) => data.chats.roomId);
+  const { roomId, receiverId  } = useSelector((data: StoreType) => data.chats);
 
   if(!data?.sendMessage) return null;
   const { sendMessage } = data;
@@ -17,9 +17,13 @@ export const MessageComposer = () => {
   }
 
   const deliverMessage = () => {
-    if(!text || !roomId) return;
+    if(!text || ( !roomId && !receiverId )) return;
 
-    sendMessage(roomId, text);
+    sendMessage({
+      message: text,
+      ...(roomId && { roomId }),
+      ...(receiverId && { receiverId }),
+    });
     setText('');
   }
 
@@ -29,7 +33,7 @@ export const MessageComposer = () => {
         <div className="w-[66%]">
           <input type="text" placeholder="Type a message" 
             className="px-5 py-3 bg-[#2a3942] rounded-lg w-full outline-none text-white"
-            onChange={handleChangeText}
+            onChange={handleChangeText} value={text}
           />
         </div>
         <div className="text-gray-400 text-3xl cursor-pointer"

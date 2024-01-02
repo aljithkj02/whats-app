@@ -14,7 +14,7 @@ export const LeftBar = () => {
     const [chatsData, setChatsData] = useState<IChat[]>([]);
     const [usersData, setUsersData] = useState<IUser[]>([]);
 
-    const myId = useSelector((data: StoreType) => data.chats.myId);
+    const { myId } = useSelector((data: StoreType) => data.chats);
     const dispatch = useDispatch();
 
     useEffect(() => {
