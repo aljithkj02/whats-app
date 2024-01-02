@@ -63,4 +63,4 @@ export const MyContextProvider = ({ children }: { children : ReactNode }) => {
     )
 }
 
-export const useMyContext = () => useContext(myContext);
+export const useMyContext = () => useContext<MyContextMethods | undefined>(myContext);
