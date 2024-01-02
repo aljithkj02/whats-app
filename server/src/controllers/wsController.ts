@@ -1,47 +1,37 @@
 import { Message } from "../model/message.model";
-import { TypingStatusType, UserMessageType } from "../enums/ws.incoming"
+import { UserMessageType } from "../enums/ws.incoming"
 import { connections } from "./poolController";
 import { Room } from "../model/room.model";
 
 export const sendMessageToUser = async ( payload: UserMessageType, id: string ) => {
     const { receiverId, message } = payload;
-    if(!payload.receiverId) return;
+    if(!receiverId) return;
 
-    const receiverConnection = connections.get(payload.receiverId);
-
-    if(receiverConnection) {
-        receiverConnection.sendUTF(payload.message);
-    } 
+    const room = await Room.create({ 
+        isGroup: false, 
+        owner: id,
+        members: [ id, receiverId ]
+    })
 
     const messageData = await Message.create({
         message,
-        receiverId: payload.receiverId,
+        roomId: room._id,
         senderId: id,
-    })
+    });
 
-    const room = await Room.find({ 
-        isGroup: false, 
-        members: { 
-            $all: [ receiverId, id ]
+    await Room.updateOne({
+        _id: room._id,
+    }, {
+        $push: {
+            messages: messageData._id,
         }
     })
 
-    if(room.length) {
-        await Room.updateOne({ 
-            _id: room[0]._id,
-        }, {
-            $push: {
-                messages: messageData._id,
-            }
-        })
-    } else {
-        await Room.create({
-            owner: id,
-            isGroup: false,
-            members: [receiverId, id],
-            messages: [messageData._id],
-        })
-    }
+    const receiverConnection = connections.get(receiverId);
+
+    if(receiverConnection) {
+        receiverConnection.sendUTF(JSON.stringify(messageData));
+    } 
 
     console.log("Successfully Send the Message!");
 }
