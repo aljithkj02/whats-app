@@ -35,6 +35,6 @@ jobs:
         with:
           context: ./client
           push: true
-          tags: aljithkj02/whatsApp-client:latest
+          tags: aljithkj02/whatsapp-client:latest
 
 
