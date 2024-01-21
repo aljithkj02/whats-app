@@ -1,7 +1,7 @@
 import { IMessage } from "interfaces/chat.interface";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { pushMessage } from "store/chatSlice";
+import { pushMessage, setRoomId } from "store/chatSlice";
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
 interface MyContextMethods {
@@ -48,6 +48,7 @@ export const MyContextProvider = ({ children }: { children : ReactNode }) => {
             const newMessage: IMessage = JSON.parse(e.data);
             // console.log({newMessage});
             dispatch(pushMessage(newMessage));
+            dispatch(setRoomId(newMessage._id));
           }
         };
     }
