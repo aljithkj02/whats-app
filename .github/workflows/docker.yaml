@@ -30,3 +30,11 @@ jobs:
       - name: Is login successful
         run: echo "Login successful!"
 
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./client
+          push: true
+          tags: aljithkj02/whatsApp-client:latest
+
+
